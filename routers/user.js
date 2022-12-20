@@ -5,6 +5,8 @@ const auth = require('../middleware/auth')
 const multer = require('multer')
 const sharp = require('sharp')
 const router = new express.Router()
+const upload = require('../utils/upload')
+
 
 // ------------------Auth------------------//
 
@@ -89,20 +91,6 @@ router.patch('/users/me', auth, async(req, res)=>{
 })
 
 
-//Upload avatar function
-const upload = multer({
-    limits: {
-        fileSize: 1000000
-    },
-    fileFilter(req, file, cb){
-        if(!file.originalname.match(/\.(jpg||jpeg||png)$/)){
-            return cb(new Error('Please upload an image'))
-        }
-
-        cb(undefined, true)
-    }
-})
-
 
 //Upload Avatar API
 router.post('/users/me/avatar', auth ,upload.single('avatar'), async(req, res)=>{
@@ -138,9 +126,6 @@ router.get('/users/:id/avatar', async(req, res) =>{
         res.status(404).send()
     }
 })
-
-
-
 
 
 
