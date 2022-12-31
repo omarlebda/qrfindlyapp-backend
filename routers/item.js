@@ -70,8 +70,7 @@ router.get('/items/:id', auth, async(req, res)=>{
         if(!item){
             return res.status(400).send()
         }
-
-        res.send(task)
+        res.send(item)
     } catch (error) {
         res.status(500).send(error)
     }
@@ -137,7 +136,7 @@ router.get('/items/itemPicture/:id', async(req, res) =>{
 router.get('/items/itemQRcode/:id', async(req, res) =>{
     try {
         const item = await Item.findById(req.params.id)
-        if(!item || !item.itemPicture){
+        if(!item || !item.itemQRCode){
             throw new Error()
         }
         res.set('Content-Type', 'image/png')
