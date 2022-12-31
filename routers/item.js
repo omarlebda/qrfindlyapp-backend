@@ -5,6 +5,7 @@ const multer = require('multer')
 const sharp = require('sharp')
 const router = new express.Router()
 const upload = require('../utils/upload')
+const QRCode = require('qrcode')
 
 // -----------------CRUD APIs-----------------//
 
@@ -69,8 +70,7 @@ router.get('/items/:id', auth, async(req, res)=>{
         if(!item){
             return res.status(400).send()
         }
-
-        res.send(task)
+        res.send(item)
     } catch (error) {
         res.status(500).send(error)
     }
@@ -125,6 +125,22 @@ router.get('/items/itemPicture/:id', async(req, res) =>{
         }
         res.set('Content-Type', 'image/png')
         res.send(item.itemPicture)
+    } catch (error) {
+        res.status(404).send()
+    }
+})
+
+
+
+//Get Item QRCode
+router.get('/items/itemQRcode/:id', async(req, res) =>{
+    try {
+        const item = await Item.findById(req.params.id)
+        if(!item || !item.itemQRCode){
+            throw new Error()
+        }
+        res.set('Content-Type', 'image/png')
+        res.send(item.itemQRCode)
     } catch (error) {
         res.status(404).send()
     }
