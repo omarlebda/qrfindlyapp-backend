@@ -39,9 +39,6 @@ itemSchema.pre('save', async function(next){
     }
 
     let stringdata = JSON.stringify(obj)
-
-    // Converting the data into base64
-
     try {
         const generateQR = await QRCode.toDataURL(stringdata, { errorCorrectionLevel: 'M' })
         var buffer = Buffer.from(generateQR.split(",")[1], 'base64'); 
