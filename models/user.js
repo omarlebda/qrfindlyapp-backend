@@ -16,7 +16,22 @@ const userSchema = new mongoose.Schema({
     location: {
         type: String
     },
+    phoneNumber: {
+        type: String
+    },
     about: {
+        type: String
+    },
+    facebookLink: {
+        type: String
+    },
+    instagramLink: {
+        type: String
+    },
+    twitterLink: {
+        type: String
+    },
+    whatsappLink: {
         type: String
     },
     age: {
@@ -84,7 +99,7 @@ userSchema.methods.toJSON = function(){
 
     delete userObject.password
     delete userObject.tokens
-    delete userObject.avatar
+    // //delete userObject.avatar
     return userObject
 }
 
