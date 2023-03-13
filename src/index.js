@@ -1,4 +1,6 @@
 const express = require('express')
+const http = require('http');
+const { Server } = require('socket.io');
 require('../db/mongoose');
 const User = require('../models/user')
 const userRouter = require('../routers/user')
@@ -7,12 +9,6 @@ const cors=require("cors");
 
 
 const app = express()
-const port = process.env.PORT || 3000
-
-
- 
-
-
 app.use(express.json())
 app.use(function (req, res, next) {
 
@@ -36,7 +32,40 @@ app.use(itemRouter)
 
 
 
-app.listen(port, ()=>{
+
+const server = http.createServer(app);
+const io = new Server(server,{
+  cors: {
+    origin: '*',
+    methods: ['GET', 'POST']
+  }
+});
+const port = process.env.PORT || 3000
+
+//Socket Code
+io.on('connection', (socket) => {
+    console.log('A client connected');
+  
+    socket.on('disconnect', () => {
+      console.log('A client disconnected');
+    });
+  
+    // Listen for incoming messages from the client
+    socket.on('message', (message) => {
+      console.log('Received message from client:', message);
+  
+      // Broadcast the message to all connected clients
+      io.emit('message', message);
+    });
+  });
+ 
+
+
+
+
+
+
+  server.listen(port, ()=>{
     console.log("Server is running..." + port)
 })
 

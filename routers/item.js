@@ -10,10 +10,17 @@ const QRCode = require('qrcode')
 // -----------------CRUD APIs-----------------//
 
 //Create Item
-router.post('/items', auth, async (req, res)=>{
-
+router.post('/items', auth, upload.single('itemPicture'), async (req, res)=>{
+    let buffer;
+     
+    if(req.file){
+        buffer = await sharp(req.file.buffer).resize({width: 250, height: 250}).png().toBuffer() 
+    }else{
+        buffer = null
+    }
     const item = new Item({
         ...req.body,
+        itemPicture: buffer,
         owner: req.user._id
     })
     try {
@@ -23,6 +30,7 @@ router.post('/items', auth, async (req, res)=>{
         res.status(400).send(error)
     }
 })
+
 
 //Update Item
 router.patch('/items/:id', auth, async(req, res) =>{
@@ -126,7 +134,7 @@ router.get('/items/itemPicture/:id', async(req, res) =>{
         res.set('Content-Type', 'image/png')
         res.send(item.itemPicture)
     } catch (error) {
-        res.status(404).send()
+        res.status(404).send({"error": error})
     }
 })
 

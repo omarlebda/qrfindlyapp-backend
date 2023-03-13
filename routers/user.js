@@ -28,10 +28,13 @@ router.post('/users', async (req, res)=>{
 router.post('/users/login', async(req, res) => {
     try {
         const user = await User.findByCredentials(req.body.email, req.body.password)
+        if (!user) {
+            return res.status(401).send({ message: 'Invalid email or password' });
+          }
         const token = await user.generateAuthToken()
         res.send({user, token})
     } catch (error) {
-        res.status(400).send("error")
+        res.status(500).send({ message: 'Internal server error' })
     }
 })
 
