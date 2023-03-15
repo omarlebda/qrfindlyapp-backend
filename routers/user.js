@@ -136,6 +136,57 @@ router.get('/users/:id/avatar', async(req, res) =>{
 
 
 
+// POST /users/:userId/friends
+router.post('/users/:userId/friends', async (req, res) => {
+    try {
+      const userId = req.params.userId;
+      const friendId = req.body.friendId;
+  
+      const user = await User.findById(userId);
+      const friend = await User.findById(friendId);
+  
+      if (!user || !friend) {
+        return res.status(404).send();
+      }
+  
+      user.friends.push(friend);
+      await user.save();
+      
+
+      friend.friends.push(user); 
+      await friend.save();
+
+
+      res.status(201).send(user);
+    } catch (e) {
+      res.status(400).send(e);
+    }
+  });
+
+
+  //Get User friends
+  router.get('/users/:userId/friends', async (req, res) => {
+    try {
+      const userId = req.params.userId;
+      const user = await User.findById(userId).populate('friends', '_id firstName lastName about');
+      if (!user) {
+        return res.status(404).send();
+      }
+      res.send(user.friends);
+    } catch (e) {
+      res.status(500).send(e);
+    }
+  });
+  
+
+
+  
+  
+
+
+
+
+
 
 
 module.exports = router
