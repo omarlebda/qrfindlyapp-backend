@@ -5,6 +5,8 @@ require('../db/mongoose');
 const User = require('../models/user')
 const userRouter = require('../routers/user')
 const itemRouter = require('../routers/item')
+const chatRouter = require('../routers/chat')
+
 const cors=require("cors");
 
 
@@ -29,6 +31,8 @@ app.use(function (req, res, next) {
 });
 app.use(userRouter)
 app.use(itemRouter)
+app.use(chatRouter)
+
 
 
 
